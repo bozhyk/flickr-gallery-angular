@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { GalleryService } from 'src/app/core/services/gallery.service';
 
 @Component({
     selector: 'image',
@@ -8,8 +9,7 @@ import { Component, Input } from '@angular/core';
 export class ImageComponent {
     @Input() imageData: any;
     imageLink: string;
-    constructor(){
-    }
+    constructor(private galleryService: GalleryService) {}
 
     ngOnInit() {
         this.imageLink = `https://farm${this.imageData.farm}.staticflickr.com/${this.imageData.server}/${this.imageData.id}_${this.imageData.secret}.jpg`;

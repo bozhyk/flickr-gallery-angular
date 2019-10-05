@@ -13,7 +13,7 @@ export class GalleryComponent {
     private gallery = [];
     private isLoading = true;
     private searchValue = 'pets';
-    private page = 1;
+    private page = 0;
 
     constructor(private galleryService: GalleryService) {}
 
@@ -27,7 +27,6 @@ export class GalleryComponent {
     }
 
     loadImageGallery(searchValue:string, page:number) {
-
         const flush = this.searchValue !== searchValue;
         this.searchValue = searchValue;
 
