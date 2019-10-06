@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
@@ -20,10 +21,27 @@ export class GalleryService {
 
   getCalendarData(searchValue, page): Observable<any> {
     const getImagesUrl = `/services/rest/?method=flickr.photos.search&api_key=${this.apiKey}&tags=${searchValue}&page=${page}&tag_mode=any&per_page=${this.perPage}&format=json&safe_search=1&nojsoncallback=1`;
-    return this.http.get<any>(`${this.corsUrl}${this.flickrApiUrl}${getImagesUrl}`, httpOptions);
+    return this.http.get<any>(`${this.corsUrl}${this.flickrApiUrl}${getImagesUrl}`, httpOptions)
+      .pipe(map((data) => data.photos.photo.map((imageData) => ({
+            ...imageData,
+            src: this.getImageUrl(imageData),
+            thumb: this.getThumbUrl(imageData),
+            avatar: this.getAvatarUrl(imageData),
+            caption: imageData.title,
+          })
+        )
+      ));
   }
 
-  getImageUrl(imageData) {
-    return `https://farm${imageData.farm}.staticflickr.com/${imageData.server}/${imageData.id}_${imageData.secret}.jpg`;
+  getThumbUrl(imageData, size:string = 'm') {
+    return this.getImageUrl(imageData).replace('.jpg', `_${size}.jpg`);
+  }
+
+  getImageUrl({ id, farm, server, secret }) {
+    return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
+  }
+
+  getAvatarUrl({ farm, server, owner }) {
+    return `http://farm${farm}.staticflickr.com/${server}/buddyicons/${owner}.jpg`
   }
 }

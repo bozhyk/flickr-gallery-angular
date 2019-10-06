@@ -12,6 +12,6 @@ export class ImageComponent {
     constructor(private galleryService: GalleryService) {}
 
     ngOnInit() {
-        this.imageLink = `https://farm${this.imageData.farm}.staticflickr.com/${this.imageData.server}/${this.imageData.id}_${this.imageData.secret}.jpg`;
+        this.imageLink = this.galleryService.getThumbUrl(this.imageData);
     }
 }

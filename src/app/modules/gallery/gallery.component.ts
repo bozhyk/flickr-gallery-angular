@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Lightbox } from 'ngx-lightbox';
 import { GalleryService } from 'src/app/core/services/gallery.service';
 
 @Component({
@@ -15,7 +16,7 @@ export class GalleryComponent {
     private searchValue = 'pets';
     private page = 0;
 
-    constructor(private galleryService: GalleryService) {}
+    constructor(private galleryService: GalleryService, private lightbox: Lightbox) {}
 
     ngOnInit() {
         this.eventsSubscription = this.events.subscribe((searchValue) => this.loadImageGallery(`${searchValue}`, this.page));
@@ -38,10 +39,14 @@ export class GalleryComponent {
             }
 
             this.galleryService.getCalendarData(searchValue, page).subscribe(res => {
-                this.gallery = [...this.gallery, ...res.photos.photo];
+                this.gallery = [...this.gallery, ...res];
                 this.isLoading = false;
             });
         }
+    }
+
+    openImagePopup(index: number) {
+        this.lightbox.open(this.gallery, index, { enableTransition: false, centerVertically: true });
     }
 
     ngOnDestroy() {
