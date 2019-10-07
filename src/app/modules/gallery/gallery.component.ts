@@ -50,7 +50,9 @@ export class GalleryComponent {
     }
 
     ngOnDestroy() {
-        this.eventsSubscription.unsubscribe()
+        if (this.eventsSubscription) {
+            this.eventsSubscription.unsubscribe()
+        }
     }
 
 }
